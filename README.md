@@ -1,3 +1,23 @@
+# GitHub Pages to host CB-Tumblebug API Documentation
+
+CB-Tumblebug is a Framework for Cloud-Barista Platform to Manage Multi-Cloud Infra Service.
+
+This repository is to host CB-Tumblebug API Documentation in GitHub Pages.
+
+```
+[NOTE]
+CB-Tumblebug is currently under development. (the latest version is 0.2 cappuccino)
+So, we do not recommend using the current release in production.
+Please note that the functionalities of CB-Tumblebug are not stable and secure yet.
+If you have any difficulties in using CB-Tumblebug, please let us know.
+(Open an issue or Join the cloud-barista Slack)
+```
+
+The API document in this repo is for CB-Tumblebug master branch. 
+It is not for release but for development.
+
+***
+
 # How to host Swagger API documentation with GitHub Pages
 [<img alt="The blog of Peter Evans: How to Host Swagger Documentation With Github Pages" title="View blog post" src="https://peterevans.dev/img/blog-published-badge.svg">](https://peterevans.dev/posts/how-to-host-swagger-docs-with-github-pages/)
 

@@ -1,718 +1,2594 @@
 ---
-swagger: "2.0"
-info:
-  description: "This is a sample server Petstore server.  You can find out more about\
-    \ Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).\
-    \  For this sample, you can use the api key `special-key` to test the authorization\
-    \ filters."
-  version: "1.0.5"
-  title: "Swagger Petstore"
-  termsOfService: "http://swagger.io/terms/"
-  contact:
-    email: "apiteam@swagger.io"
-  license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "petstore.swagger.io"
-basePath: "/v2"
-tags:
-- name: "pet"
-  description: "Everything about your Pets"
-  externalDocs:
-    description: "Find out more"
-    url: "http://swagger.io"
-- name: "store"
-  description: "Access to Petstore orders"
-- name: "user"
-  description: "Operations about user"
-  externalDocs:
-    description: "Find out more about our store"
-    url: "http://swagger.io"
-schemes:
-- "https"
-- "http"
-paths:
-  /pet/{petId}/uploadImage:
-    post:
-      tags:
-      - "pet"
-      summary: "uploads an image"
-      description: ""
-      operationId: "uploadFile"
-      consumes:
-      - "multipart/form-data"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet to update"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "additionalMetadata"
-        in: "formData"
-        description: "Additional data to pass to server"
-        required: false
-        type: "string"
-      - name: "file"
-        in: "formData"
-        description: "file to upload"
-        required: false
-        type: "file"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/ApiResponse"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet:
-    post:
-      tags:
-      - "pet"
-      summary: "Add a new pet to the store"
-      description: ""
-      operationId: "addPet"
-      consumes:
-      - "application/json"
-      - "application/xml"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
-        required: true
-        schema:
-          $ref: "#/definitions/Pet"
-      responses:
-        405:
-          description: "Invalid input"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-    put:
-      tags:
-      - "pet"
-      summary: "Update an existing pet"
-      description: ""
-      operationId: "updatePet"
-      consumes:
-      - "application/json"
-      - "application/xml"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
-        required: true
-        schema:
-          $ref: "#/definitions/Pet"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-        405:
-          description: "Validation exception"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet/findByStatus:
-    get:
-      tags:
-      - "pet"
-      summary: "Finds Pets by status"
-      description: "Multiple status values can be provided with comma separated strings"
-      operationId: "findPetsByStatus"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "status"
-        in: "query"
-        description: "Status values that need to be considered for filter"
-        required: true
-        type: "array"
-        items:
-          type: "string"
-          enum:
-          - "available"
-          - "pending"
-          - "sold"
-          default: "available"
-        collectionFormat: "multi"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid status value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet/findByTags:
-    get:
-      tags:
-      - "pet"
-      summary: "Finds Pets by tags"
-      description: "Multiple tags can be provided with comma separated strings. Use\
-        \ tag1, tag2, tag3 for testing."
-      operationId: "findPetsByTags"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "tags"
-        in: "query"
-        description: "Tags to filter by"
-        required: true
-        type: "array"
-        items:
-          type: "string"
-        collectionFormat: "multi"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid tag value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-      deprecated: true
-  /pet/{petId}:
-    get:
-      tags:
-      - "pet"
-      summary: "Find pet by ID"
-      description: "Returns a single pet"
-      operationId: "getPetById"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet to return"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-      security:
-      - api_key: []
-    post:
-      tags:
-      - "pet"
-      summary: "Updates a pet in the store with form data"
-      description: ""
-      operationId: "updatePetWithForm"
-      consumes:
-      - "application/x-www-form-urlencoded"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet that needs to be updated"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "name"
-        in: "formData"
-        description: "Updated name of the pet"
-        required: false
-        type: "string"
-      - name: "status"
-        in: "formData"
-        description: "Updated status of the pet"
-        required: false
-        type: "string"
-      responses:
-        405:
-          description: "Invalid input"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-    delete:
-      tags:
-      - "pet"
-      summary: "Deletes a pet"
-      description: ""
-      operationId: "deletePet"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "api_key"
-        in: "header"
-        required: false
-        type: "string"
-      - name: "petId"
-        in: "path"
-        description: "Pet id to delete"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /store/order:
-    post:
-      tags:
-      - "store"
-      summary: "Place an order for a pet"
-      description: ""
-      operationId: "placeOrder"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "order placed for purchasing the pet"
-        required: true
-        schema:
-          $ref: "#/definitions/Order"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Order"
-        400:
-          description: "Invalid Order"
-  /store/order/{orderId}:
-    get:
-      tags:
-      - "store"
-      summary: "Find purchase order by ID"
-      description: "For valid response try integer IDs with value >= 1 and <= 10.\
-        \ Other values will generated exceptions"
-      operationId: "getOrderById"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "orderId"
-        in: "path"
-        description: "ID of pet that needs to be fetched"
-        required: true
-        type: "integer"
-        maximum: 10
-        minimum: 1
-        format: "int64"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Order"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Order not found"
-    delete:
-      tags:
-      - "store"
-      summary: "Delete purchase order by ID"
-      description: "For valid response try integer IDs with positive integer value.\
-        \ Negative or non-integer values will generate API errors"
-      operationId: "deleteOrder"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "orderId"
-        in: "path"
-        description: "ID of the order that needs to be deleted"
-        required: true
-        type: "integer"
-        minimum: 1
-        format: "int64"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Order not found"
-  /store/inventory:
-    get:
-      tags:
-      - "store"
-      summary: "Returns pet inventories by status"
-      description: "Returns a map of status codes to quantities"
-      operationId: "getInventory"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "object"
-            additionalProperties:
-              type: "integer"
-              format: "int32"
-      security:
-      - api_key: []
-  /user/createWithArray:
-    post:
-      tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithArrayInput"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
-        required: true
-        schema:
-          type: "array"
-          items:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/createWithList:
-    post:
-      tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithListInput"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
-        required: true
-        schema:
-          type: "array"
-          items:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/{username}:
-    get:
-      tags:
-      - "user"
-      summary: "Get user by user name"
-      description: ""
-      operationId: "getUserByName"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be fetched. Use user1 for testing. "
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/User"
-        400:
-          description: "Invalid username supplied"
-        404:
-          description: "User not found"
-    put:
-      tags:
-      - "user"
-      summary: "Updated user"
-      description: "This can only be done by the logged in user."
-      operationId: "updateUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "name that need to be updated"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "Updated user object"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
-      responses:
-        400:
-          description: "Invalid user supplied"
-        404:
-          description: "User not found"
-    delete:
-      tags:
-      - "user"
-      summary: "Delete user"
-      description: "This can only be done by the logged in user."
-      operationId: "deleteUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be deleted"
-        required: true
-        type: "string"
-      responses:
-        400:
-          description: "Invalid username supplied"
-        404:
-          description: "User not found"
-  /user/login:
-    get:
-      tags:
-      - "user"
-      summary: "Logs user into the system"
-      description: ""
-      operationId: "loginUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "query"
-        description: "The user name for login"
-        required: true
-        type: "string"
-      - name: "password"
-        in: "query"
-        description: "The password for login in clear text"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          headers:
-            X-Expires-After:
-              type: "string"
-              format: "date-time"
-              description: "date in UTC when token expires"
-            X-Rate-Limit:
-              type: "integer"
-              format: "int32"
-              description: "calls per hour allowed by the user"
-          schema:
-            type: "string"
-        400:
-          description: "Invalid username/password supplied"
-  /user/logout:
-    get:
-      tags:
-      - "user"
-      summary: "Logs out current logged in user session"
-      description: ""
-      operationId: "logoutUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters: []
-      responses:
-        default:
-          description: "successful operation"
-  /user:
-    post:
-      tags:
-      - "user"
-      summary: "Create user"
-      description: "This can only be done by the logged in user."
-      operationId: "createUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Created user object"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-securityDefinitions:
-  api_key:
-    type: "apiKey"
-    name: "api_key"
-    in: "header"
-  petstore_auth:
-    type: "oauth2"
-    authorizationUrl: "https://petstore.swagger.io/oauth/authorize"
-    flow: "implicit"
-    scopes:
-      read:pets: "read your pets"
-      write:pets: "modify pets in your account"
+basePath: /tumblebug
 definitions:
-  ApiResponse:
-    type: "object"
+  common.ConfigInfo:
     properties:
-      code:
-        type: "integer"
-        format: "int32"
-      type:
-        type: "string"
+      id:
+        example: configid01
+        type: string
+      name:
+        example: spider
+        type: string
+      value:
+        example: http://localhost:1024/spider
+        type: string
+    type: object
+  common.IID:
+    properties:
+      nameId:
+        description: NameID by user
+        type: string
+      systemId:
+        description: SystemID by CloudOS
+        type: string
+    type: object
+  common.KeyValue:
+    properties:
+      key:
+        type: string
+      value:
+        type: string
+    type: object
+  common.NsInfo:
+    properties:
+      description:
+        example: Description for this namespace
+        type: string
+      id:
+        example: namespaceid01
+        type: string
+      name:
+        example: namespacename01
+        type: string
+    type: object
+  common.NsReq:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    type: object
+  common.RestGetAllConfigResponse:
+    properties:
+      config:
+        description: Name string     `json:"name"`
+        items:
+          $ref: '#/definitions/common.ConfigInfo'
+        type: array
+    type: object
+  common.RestGetAllNsResponse:
+    properties:
+      ns:
+        description: Name string     `json:"name"`
+        items:
+          $ref: '#/definitions/common.NsInfo'
+        type: array
+    type: object
+  common.SimpleMsg:
+    properties:
       message:
-        type: "string"
-  Category:
-    type: "object"
+        example: Any message
+        type: string
+    type: object
+  mcir.RestGetAllImageResponse:
     properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Category"
-  Pet:
-    type: "object"
-    required:
-    - "name"
-    - "photoUrls"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      category:
-        $ref: "#/definitions/Category"
-      name:
-        type: "string"
-        example: "doggie"
-      photoUrls:
-        type: "array"
-        xml:
-          wrapped: true
+      image:
         items:
-          type: "string"
-          xml:
-            name: "photoUrl"
-      tags:
-        type: "array"
-        xml:
-          wrapped: true
+          $ref: '#/definitions/mcir.TbImageInfo'
+        type: array
+    type: object
+  mcir.RestGetAllSecurityGroupResponse:
+    properties:
+      securityGroup:
         items:
-          xml:
-            name: "tag"
-          $ref: "#/definitions/Tag"
-      status:
-        type: "string"
-        description: "pet status in the store"
-        enum:
-        - "available"
-        - "pending"
-        - "sold"
-    xml:
-      name: "Pet"
-  Tag:
-    type: "object"
+          $ref: '#/definitions/mcir.TbSecurityGroupInfo'
+        type: array
+    type: object
+  mcir.RestGetAllSpecResponse:
     properties:
-      id:
-        type: "integer"
-        format: "int64"
+      spec:
+        items:
+          $ref: '#/definitions/mcir.TbSpecInfo'
+        type: array
+    type: object
+  mcir.RestGetAllSshKeyResponse:
+    properties:
+      sshKey:
+        items:
+          $ref: '#/definitions/mcir.TbSshKeyInfo'
+        type: array
+    type: object
+  mcir.RestGetAllVNetResponse:
+    properties:
+      vNet:
+        items:
+          $ref: '#/definitions/mcir.TbVNetInfo'
+        type: array
+    type: object
+  mcir.RestLookupImageRequest:
+    properties:
+      connectionName:
+        type: string
+    type: object
+  mcir.RestLookupSpecRequest:
+    properties:
+      connectionName:
+        type: string
+    type: object
+  mcir.SpiderGpuInfo:
+    properties:
+      count:
+        type: string
+      mem:
+        type: string
+      mfr:
+        type: string
+      model:
+        type: string
+    type: object
+  mcir.SpiderImageInfo:
+    properties:
+      guestOS:
+        description: Windows7, Ubuntu etc.
+        type: string
+      iid:
+        $ref: '#/definitions/common.IID'
+        description: Fields for response
+        type: object
+      keyValueList:
+        items:
+          $ref: '#/definitions/common.KeyValue'
+        type: array
       name:
-        type: "string"
-    xml:
-      name: "Tag"
-  Order:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      petId:
-        type: "integer"
-        format: "int64"
-      quantity:
-        type: "integer"
-        format: "int32"
-      shipDate:
-        type: "string"
-        format: "date-time"
+        description: Fields for request
+        type: string
       status:
-        type: "string"
-        description: "Order Status"
-        enum:
-        - "placed"
-        - "approved"
-        - "delivered"
-      complete:
-        type: "boolean"
-    xml:
-      name: "Order"
-  User:
-    type: "object"
+        description: available, unavailable
+        type: string
+    type: object
+  mcir.SpiderImageList:
     properties:
+      image:
+        items:
+          $ref: '#/definitions/mcir.SpiderImageInfo'
+        type: array
+    type: object
+  mcir.SpiderSecurityRuleInfo:
+    properties:
+      direction:
+        type: string
+      fromPort:
+        type: string
+      ipProtocol:
+        type: string
+      toPort:
+        type: string
+    type: object
+  mcir.SpiderSpecInfo:
+    properties:
+      gpu:
+        items:
+          $ref: '#/definitions/mcir.SpiderGpuInfo'
+        type: array
+      keyValueList:
+        items:
+          $ref: '#/definitions/common.KeyValue'
+        type: array
+      mem:
+        type: string
+      name:
+        type: string
+      region:
+        type: string
+      vcpu:
+        $ref: '#/definitions/mcir.SpiderVCpuInfo'
+        type: object
+    type: object
+  mcir.SpiderSpecList:
+    properties:
+      vmspec:
+        items:
+          $ref: '#/definitions/mcir.SpiderSpecInfo'
+        type: array
+    type: object
+  mcir.SpiderSubnetInfo:
+    properties:
+      iid:
+        $ref: '#/definitions/common.IID'
+        description: '{NameId, SystemId}'
+        type: object
+      ipv4_CIDR:
+        type: string
+      keyValueList:
+        items:
+          $ref: '#/definitions/common.KeyValue'
+        type: array
+    type: object
+  mcir.SpiderSubnetReqInfo:
+    properties:
+      ipv4_CIDR:
+        type: string
+      keyValueList:
+        items:
+          $ref: '#/definitions/common.KeyValue'
+        type: array
+      name:
+        type: string
+    type: object
+  mcir.SpiderVCpuInfo:
+    properties:
+      clock:
+        description: GHz
+        type: string
+      count:
+        type: string
+    type: object
+  mcir.TbImageInfo:
+    properties:
+      connectionName:
+        type: string
+      creationDate:
+        type: string
+      cspImageId:
+        type: string
+      cspImageName:
+        type: string
+      description:
+        type: string
+      guestOS:
+        description: Windows7, Ubuntu etc.
+        type: string
       id:
-        type: "integer"
-        format: "int64"
+        type: string
+      keyValueList:
+        items:
+          $ref: '#/definitions/common.KeyValue'
+        type: array
+      name:
+        type: string
+      status:
+        description: available, unavailable
+        type: string
+    type: object
+  mcir.TbImageReq:
+    properties:
+      connectionName:
+        type: string
+      cspImageId:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+    type: object
+  mcir.TbSecurityGroupInfo:
+    properties:
+      connectionName:
+        type: string
+      cspSecurityGroupId:
+        type: string
+      cspSecurityGroupName:
+        type: string
+      description:
+        type: string
+      firewallRules:
+        items:
+          $ref: '#/definitions/mcir.SpiderSecurityRuleInfo'
+        type: array
+      id:
+        type: string
+      keyValueList:
+        items:
+          $ref: '#/definitions/common.KeyValue'
+        type: array
+      name:
+        type: string
+      vNetId:
+        type: string
+    type: object
+  mcir.TbSecurityGroupReq:
+    properties:
+      connectionName:
+        type: string
+      description:
+        type: string
+      firewallRules:
+        items:
+          $ref: '#/definitions/mcir.SpiderSecurityRuleInfo'
+        type: array
+      name:
+        type: string
+      vNetId:
+        type: string
+    type: object
+  mcir.TbSpecInfo:
+    properties:
+      connectionName:
+        type: string
+      cost_per_hour:
+        type: string
+      cspSpecName:
+        type: string
+      description:
+        type: string
+      ebs_bw_Mbps:
+        type: string
+      gpu_model:
+        type: string
+      gpu_p2p:
+        type: string
+      gpumem_GiB:
+        type: string
+      id:
+        type: string
+      max_num_storage:
+        type: string
+      max_total_storage_TiB:
+        type: string
+      mem_GiB:
+        type: string
+      mem_MiB:
+        type: string
+      name:
+        type: string
+      net_bw_Gbps:
+        type: string
+      num_core:
+        type: string
+      num_gpu:
+        type: string
+      num_storage:
+        type: string
+      num_vCPU:
+        type: string
+      os_type:
+        type: string
+      storage_GiB:
+        type: string
+    type: object
+  mcir.TbSpecReq:
+    properties:
+      connectionName:
+        type: string
+      cspSpecName:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+    type: object
+  mcir.TbSshKeyInfo:
+    properties:
+      connectionName:
+        type: string
+      cspSshKeyName:
+        type: string
+      description:
+        type: string
+      fingerprint:
+        type: string
+      id:
+        type: string
+      keyValueList:
+        items:
+          $ref: '#/definitions/common.KeyValue'
+        type: array
+      name:
+        type: string
+      privateKey:
+        type: string
+      publicKey:
+        type: string
       username:
-        type: "string"
-      firstName:
-        type: "string"
-      lastName:
-        type: "string"
-      email:
-        type: "string"
-      password:
-        type: "string"
-      phone:
-        type: "string"
-      userStatus:
-        type: "integer"
-        format: "int32"
-        description: "User Status"
-    xml:
-      name: "User"
-externalDocs:
-  description: "Find out more about Swagger"
-  url: "http://swagger.io"
+        type: string
+    type: object
+  mcir.TbSshKeyReq:
+    properties:
+      connectionName:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+    type: object
+  mcir.TbVNetInfo:
+    properties:
+      cidrBlock:
+        type: string
+      connectionName:
+        type: string
+      cspVNetId:
+        type: string
+      cspVNetName:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      keyValueList:
+        items:
+          $ref: '#/definitions/common.KeyValue'
+        type: array
+      name:
+        type: string
+      status:
+        type: string
+      subnetInfoList:
+        items:
+          $ref: '#/definitions/mcir.SpiderSubnetInfo'
+        type: array
+    type: object
+  mcir.TbVNetReq:
+    properties:
+      cidrBlock:
+        type: string
+      connectionName:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      subnetInfoList:
+        items:
+          $ref: '#/definitions/mcir.SpiderSubnetReqInfo'
+        type: array
+    type: object
+  mcis.AgentInstallContent:
+    properties:
+      mcis_id:
+        type: string
+      result:
+        type: string
+      vm_id:
+        type: string
+      vm_ip:
+        type: string
+    type: object
+  mcis.AgentInstallContentWrapper:
+    properties:
+      result_array:
+        items:
+          $ref: '#/definitions/mcis.AgentInstallContent'
+        type: array
+    type: object
+  mcis.BenchmarkInfo:
+    properties:
+      desc:
+        type: string
+      elapsed:
+        type: string
+      result:
+        type: string
+      resultarray:
+        description: struct-element cycle ?
+        items:
+          $ref: '#/definitions/mcis.BenchmarkInfo'
+        type: array
+      specid:
+        type: string
+      unit:
+        type: string
+    type: object
+  mcis.BenchmarkInfoArray:
+    properties:
+      resultarray:
+        items:
+          $ref: '#/definitions/mcis.BenchmarkInfo'
+        type: array
+    type: object
+  mcis.GeoLocation:
+    properties:
+      briefAddr:
+        type: string
+      cloudType:
+        type: string
+      latitude:
+        type: string
+      longitude:
+        type: string
+      nativeRegion:
+        type: string
+    type: object
+  mcis.McisCmdReq:
+    properties:
+      command:
+        type: string
+      ip:
+        type: string
+      mcis_id:
+        type: string
+      ssh_key:
+        type: string
+      user_name:
+        type: string
+      vm_id:
+        type: string
+    type: object
+  mcis.McisRecommendReq:
+    properties:
+      max_result_num:
+        type: string
+      placement_algo:
+        type: string
+      placement_param:
+        items:
+          $ref: '#/definitions/common.KeyValue'
+        type: array
+      vm_req:
+        items:
+          $ref: '#/definitions/mcis.TbVmRecommendReq'
+        type: array
+    type: object
+  mcis.RegionInfo:
+    properties:
+      region:
+        type: string
+      zone:
+        type: string
+    type: object
+  mcis.RestGetAllBenchmarkRequest:
+    properties:
+      host:
+        type: string
+    type: object
+  mcis.RestGetAllMcisResponse:
+    properties:
+      mcis:
+        items:
+          $ref: '#/definitions/mcis.TbMcisInfo'
+        type: array
+    type: object
+  mcis.RestGetBenchmarkRequest:
+    properties:
+      host:
+        type: string
+    type: object
+  mcis.RestPostCmdMcisResponse:
+    properties:
+      mcis_id:
+        type: string
+      result:
+        type: string
+      vm_id:
+        type: string
+      vm_ip:
+        type: string
+    type: object
+  mcis.RestPostCmdMcisResponseWrapper:
+    properties:
+      result_array:
+        items:
+          $ref: '#/definitions/mcis.RestPostCmdMcisResponse'
+        type: array
+    type: object
+  mcis.RestPostCmdMcisVmResponse:
+    properties:
+      result:
+        type: string
+    type: object
+  mcis.RestPostMcisRecommandResponse:
+    properties:
+      placement_algo:
+        type: string
+      placement_param:
+        items:
+          $ref: '#/definitions/common.KeyValue'
+        type: array
+      vm_recommend:
+        description: Vm_req          []TbVmRecommendReq    `json:"vm_req"`
+        items:
+          $ref: '#/definitions/mcis.TbVmRecommendInfo'
+        type: array
+    type: object
+  mcis.SpiderVMInfo:
+    properties:
+      iid:
+        $ref: '#/definitions/common.IID'
+        description: Fields for response
+        type: object
+      imageIId:
+        $ref: '#/definitions/common.IID'
+        type: object
+      imageName:
+        type: string
+      keyPairIId:
+        $ref: '#/definitions/common.IID'
+        type: object
+      keyPairName:
+        type: string
+      keyValueList:
+        items:
+          $ref: '#/definitions/common.KeyValue'
+        type: array
+      name:
+        description: Fields for request
+        type: string
+      networkInterface:
+        description: ex) eth0
+        type: string
+      privateDNS:
+        type: string
+      privateIP:
+        type: string
+      publicDNS:
+        type: string
+      publicIP:
+        type: string
+      region:
+        $ref: '#/definitions/mcis.RegionInfo'
+        description: ex) {us-east1, us-east1-c} or {ap-northeast-2}
+        type: object
+      securityGroupIIds:
+        description: AWS, ex) sg-0b7452563e1121bb6
+        items:
+          $ref: '#/definitions/common.IID'
+        type: array
+      securityGroupNames:
+        items:
+          type: string
+        type: array
+      startTime:
+        description: 'Timezone: based on cloud-barista server location.'
+        type: string
+      subnetIID:
+        $ref: '#/definitions/common.IID'
+        description: AWS, ex) subnet-8c4a53e4
+        type: object
+      subnetName:
+        type: string
+      vmblockDisk:
+        description: ex)
+        type: string
+      vmbootDisk:
+        description: ex) /dev/sda1
+        type: string
+      vmspecName:
+        description: Fields for both request and response
+        type: string
+      vmuserId:
+        description: ex) user1
+        type: string
+      vmuserPasswd:
+        type: string
+      vpcIID:
+        $ref: '#/definitions/common.IID'
+        type: object
+      vpcname:
+        type: string
+    type: object
+  mcis.TbMcisInfo:
+    properties:
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      placement_algo:
+        type: string
+      status:
+        type: string
+      targetAction:
+        type: string
+      targetStatus:
+        type: string
+      vm:
+        items:
+          $ref: '#/definitions/mcis.TbVmInfo'
+        type: array
+    type: object
+  mcis.TbMcisReq:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      placement_algo:
+        type: string
+      vm:
+        items:
+          $ref: '#/definitions/mcis.TbVmReq'
+        type: array
+    type: object
+  mcis.TbVmInfo:
+    properties:
+      connectionName:
+        type: string
+      cspViewVmDetail:
+        $ref: '#/definitions/mcis.SpiderVMInfo'
+        type: object
+      description:
+        type: string
+      id:
+        type: string
+      imageId:
+        type: string
+      location:
+        $ref: '#/definitions/mcis.GeoLocation'
+        type: object
+      name:
+        type: string
+      privateDNS:
+        type: string
+      privateIP:
+        type: string
+      publicDNS:
+        type: string
+      publicIP:
+        type: string
+      region:
+        $ref: '#/definitions/mcis.RegionInfo'
+        description: 2. Provided by CB-Spider
+        type: object
+      securityGroupIds:
+        items:
+          type: string
+        type: array
+      specId:
+        type: string
+      sshKeyId:
+        type: string
+      status:
+        description: 3. Required by CB-Tumblebug
+        type: string
+      subnetId:
+        type: string
+      targetAction:
+        type: string
+      targetStatus:
+        type: string
+      vNetId:
+        type: string
+      vmBlockDisk:
+        type: string
+      vmBootDisk:
+        description: ex) /dev/sda1
+        type: string
+      vmUserAccount:
+        type: string
+      vmUserPassword:
+        type: string
+    type: object
+  mcis.TbVmPriority:
+    properties:
+      priority:
+        type: string
+      vm_spec:
+        $ref: '#/definitions/mcir.TbSpecInfo'
+        type: object
+    type: object
+  mcis.TbVmRecommendInfo:
+    properties:
+      placement_algo:
+        type: string
+      placement_param:
+        items:
+          $ref: '#/definitions/common.KeyValue'
+        type: array
+      vm_priority:
+        items:
+          $ref: '#/definitions/mcis.TbVmPriority'
+        type: array
+      vm_req:
+        $ref: '#/definitions/mcis.TbVmRecommendReq'
+        type: object
+    type: object
+  mcis.TbVmRecommendReq:
+    properties:
+      disk_size:
+        type: string
+      max_result_num:
+        type: string
+      memory_size:
+        type: string
+      placement_algo:
+        type: string
+      placement_param:
+        items:
+          $ref: '#/definitions/common.KeyValue'
+        type: array
+      request_name:
+        type: string
+      vcpu_size:
+        type: string
+    type: object
+  mcis.TbVmReq:
+    properties:
+      connectionName:
+        type: string
+      description:
+        type: string
+      imageId:
+        type: string
+      name:
+        type: string
+      securityGroupIds:
+        items:
+          type: string
+        type: array
+      specId:
+        type: string
+      sshKeyId:
+        type: string
+      subnetId:
+        type: string
+      vNetId:
+        type: string
+      vmUserAccount:
+        type: string
+      vmUserPassword:
+        type: string
+    type: object
+host: localhost:1323
+info:
+  contact:
+    email: contact-to-cloud-barista@googlegroups.com
+    name: API Support
+    url: http://cloud-barista.github.io
+  description: CB-Tumblebug REST API
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: CB-Tumblebug REST API
+  version: 0.2.0
+paths:
+  /config:
+    delete:
+      consumes:
+      - application/json
+      description: Delete all configs
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Delete all configs
+      tags:
+      - Config
+    get:
+      consumes:
+      - application/json
+      description: List all configs
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.RestGetAllConfigResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: List all configs
+      tags:
+      - Config
+    post:
+      consumes:
+      - application/json
+      description: Create or Update config (SPIDER_REST_URL, DRAGONFLY_REST_URL, ...)
+      parameters:
+      - description: Key and Value for configuration
+        in: body
+        name: config
+        required: true
+        schema:
+          $ref: '#/definitions/common.ConfigInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.ConfigInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Create or Update config
+      tags:
+      - Config
+  /config/{configId}:
+    get:
+      consumes:
+      - application/json
+      description: Get config
+      parameters:
+      - description: Config ID
+        in: path
+        name: configId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.ConfigInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Get config
+      tags:
+      - Config
+  /lookupImage:
+    get:
+      consumes:
+      - application/json
+      description: Lookup image list
+      parameters:
+      - description: Specify connectionName
+        in: body
+        name: connectionName
+        required: true
+        schema:
+          $ref: '#/definitions/mcir.RestLookupImageRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.SpiderImageList'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Lookup image list
+      tags:
+      - Image
+  /lookupImage/{imageId}:
+    get:
+      consumes:
+      - application/json
+      description: Lookup image
+      parameters:
+      - description: Specify connectionName
+        in: body
+        name: connectionName
+        required: true
+        schema:
+          $ref: '#/definitions/mcir.RestLookupImageRequest'
+      - description: Image ID
+        in: path
+        name: imageId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.SpiderImageInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Lookup image
+      tags:
+      - Image
+  /lookupSpec:
+    get:
+      consumes:
+      - application/json
+      description: Lookup spec list
+      parameters:
+      - description: Specify connectionName
+        in: body
+        name: connectionName
+        required: true
+        schema:
+          $ref: '#/definitions/mcir.RestLookupSpecRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.SpiderSpecList'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Lookup spec list
+      tags:
+      - Spec
+  /lookupSpec/{specName}:
+    get:
+      consumes:
+      - application/json
+      description: Lookup spec
+      parameters:
+      - description: Specify connectionName
+        in: body
+        name: connectionName
+        required: true
+        schema:
+          $ref: '#/definitions/mcir.RestLookupSpecRequest'
+      - description: Spec name
+        in: path
+        name: specName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.SpiderSpecInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Lookup spec
+      tags:
+      - Spec
+  /ns:
+    delete:
+      consumes:
+      - application/json
+      description: Delete all namespaces
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Delete all namespaces
+      tags:
+      - Namespace
+    get:
+      consumes:
+      - application/json
+      description: List all namespaces
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.RestGetAllNsResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: List all namespaces
+      tags:
+      - Namespace
+    post:
+      consumes:
+      - application/json
+      description: Create namespace
+      parameters:
+      - description: Details for a new namespace
+        in: body
+        name: nsReq
+        required: true
+        schema:
+          $ref: '#/definitions/common.NsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.NsInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Create namespace
+      tags:
+      - Namespace
+  /ns/{nsId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete namespace
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Delete namespace
+      tags:
+      - Namespace
+    get:
+      consumes:
+      - application/json
+      description: Get namespace
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.NsInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Get namespace
+      tags:
+      - Namespace
+  /ns/{nsId}/benchmark/mcis/{mcisId}:
+    get:
+      consumes:
+      - application/json
+      description: Get MCIS
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: MCIS ID
+        in: path
+        name: mcisId
+        required: true
+        type: string
+      - description: Host IP address to benchmark
+        in: body
+        name: hostIP
+        required: true
+        schema:
+          $ref: '#/definitions/mcis.RestGetBenchmarkRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcis.BenchmarkInfoArray'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Get MCIS
+      tags:
+      - MCIS
+  /ns/{nsId}/benchmarkall/mcis/{mcisId}:
+    get:
+      consumes:
+      - application/json
+      description: List all MCISs
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: MCIS ID
+        in: path
+        name: mcisId
+        required: true
+        type: string
+      - description: Host IP address to benchmark
+        in: body
+        name: hostIP
+        required: true
+        schema:
+          $ref: '#/definitions/mcis.RestGetAllBenchmarkRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcis.BenchmarkInfoArray'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: List all MCISs
+      tags:
+      - MCIS
+  /ns/{nsId}/cmd/mcis/{mcisId}:
+    post:
+      consumes:
+      - application/json
+      description: Send a command to specified MCIS
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: MCIS ID
+        in: path
+        name: mcisId
+        required: true
+        type: string
+      - description: MCIS Command Request
+        in: body
+        name: mcisCmdReq
+        required: true
+        schema:
+          $ref: '#/definitions/mcis.McisCmdReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcis.RestPostCmdMcisResponseWrapper'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Send a command to specified MCIS
+      tags:
+      - MCIS
+  /ns/{nsId}/cmd/mcis/{mcisId}/vm/{vmId}:
+    post:
+      consumes:
+      - application/json
+      description: Send a command to specified VM
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: MCIS ID
+        in: path
+        name: mcisId
+        required: true
+        type: string
+      - description: VM ID
+        in: path
+        name: vmId
+        required: true
+        type: string
+      - description: MCIS Command Request
+        in: body
+        name: mcisCmdReq
+        required: true
+        schema:
+          $ref: '#/definitions/mcis.McisCmdReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcis.RestPostCmdMcisVmResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Send a command to specified VM
+      tags:
+      - MCIS
+  /ns/{nsId}/install/mcis/{mcisId}:
+    post:
+      consumes:
+      - application/json
+      description: Install the benchmark agent to specified MCIS
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: MCIS ID
+        in: path
+        name: mcisId
+        required: true
+        type: string
+      - description: MCIS Command Request
+        in: body
+        name: mcisCmdReq
+        required: true
+        schema:
+          $ref: '#/definitions/mcis.McisCmdReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcis.AgentInstallContentWrapper'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Install the benchmark agent to specified MCIS
+      tags:
+      - MCIS
+  /ns/{nsId}/mcis:
+    delete:
+      consumes:
+      - application/json
+      description: Delete all MCISs
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Delete all MCISs
+      tags:
+      - MCIS
+    get:
+      consumes:
+      - application/json
+      description: List all MCISs
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcis.RestGetAllMcisResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: List all MCISs
+      tags:
+      - MCIS
+    post:
+      consumes:
+      - application/json
+      description: Create MCIS
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: Details for an MCIS object
+        in: body
+        name: mcisReq
+        required: true
+        schema:
+          $ref: '#/definitions/mcis.TbMcisReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcis.TbMcisInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Create MCIS
+      tags:
+      - MCIS
+  /ns/{nsId}/mcis/{mcisId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete MCIS
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: MCIS ID
+        in: path
+        name: mcisId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Delete MCIS
+      tags:
+      - MCIS
+    get:
+      consumes:
+      - application/json
+      description: Get MCIS
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: MCIS ID
+        in: path
+        name: mcisId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcis.TbMcisInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Get MCIS
+      tags:
+      - MCIS
+  /ns/{nsId}/mcis/{mcisId}/vm:
+    post:
+      consumes:
+      - application/json
+      description: Create VM in specified MCIS
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: MCIS ID
+        in: path
+        name: mcisId
+        required: true
+        type: string
+      - description: Details for an VM object
+        in: body
+        name: vmReq
+        required: true
+        schema:
+          $ref: '#/definitions/mcis.TbVmReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcis.TbVmInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Create VM in specified MCIS
+      tags:
+      - MCIS
+  /ns/{nsId}/mcis/{mcisId}/vm/{vmId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete MCIS
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: MCIS ID
+        in: path
+        name: mcisId
+        required: true
+        type: string
+      - description: VM ID
+        in: path
+        name: vmId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Delete MCIS
+      tags:
+      - MCIS
+    get:
+      consumes:
+      - application/json
+      description: Get MCIS
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: MCIS ID
+        in: path
+        name: mcisId
+        required: true
+        type: string
+      - description: VM ID
+        in: path
+        name: vmId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcis.TbVmInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Get MCIS
+      tags:
+      - MCIS
+  /ns/{nsId}/mcis/recommend:
+    post:
+      consumes:
+      - application/json
+      description: Get MCIS recommendation
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: Details for an MCIS object
+        in: body
+        name: mcisRecommendReq
+        required: true
+        schema:
+          $ref: '#/definitions/mcis.McisRecommendReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcis.RestPostMcisRecommandResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Get MCIS recommendation
+      tags:
+      - MCIS
+  /ns/{nsId}/monitoring/install/mcis/{mcisId}:
+    post:
+      consumes:
+      - application/json
+      description: InstallMonitorAgent MCIS
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: MCIS ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: Details for an MCIS object
+        in: body
+        name: mcisInfo
+        required: true
+        schema:
+          $ref: '#/definitions/mcis.McisCmdReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.TbSshKeyInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: InstallMonitorAgent MCIS
+      tags:
+      - Monitor
+  /ns/{nsId}/monitoring/mcis/{mcisId}/metric/{metric}:
+    get:
+      consumes:
+      - application/json
+      description: GetMonitorData MCIS
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: MCIS ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.TbSshKeyInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: GetMonitorData MCIS
+      tags:
+      - Monitor
+  /ns/{nsId}/resources/fetchImages:
+    post:
+      consumes:
+      - application/json
+      description: Fetch images
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Fetch images
+      tags:
+      - Image
+  /ns/{nsId}/resources/fetchSpecs:
+    post:
+      consumes:
+      - application/json
+      description: Fetch specs
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Fetch specs
+      tags:
+      - Spec
+  /ns/{nsId}/resources/image:
+    delete:
+      consumes:
+      - application/json
+      description: Delete all images
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Delete all images
+      tags:
+      - Image
+    get:
+      consumes:
+      - application/json
+      description: List all images
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.RestGetAllImageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: List all images
+      tags:
+      - Image
+    post:
+      consumes:
+      - application/json
+      description: Register image
+      parameters:
+      - description: registerWithInfo or registerWithId
+        in: query
+        name: registeringMethod
+        required: true
+        type: string
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: Details for an image object
+        in: body
+        name: imageInfo
+        schema:
+          $ref: '#/definitions/mcir.TbImageInfo'
+      - description: name, connectionName and cspImageId
+        in: body
+        name: imageId
+        schema:
+          $ref: '#/definitions/mcir.TbImageReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.TbImageInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Register image
+      tags:
+      - Image
+  /ns/{nsId}/resources/image/{imageId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete image
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: Image ID
+        in: path
+        name: imageId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Delete image
+      tags:
+      - Image
+    get:
+      consumes:
+      - application/json
+      description: Get image
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: Image ID
+        in: path
+        name: imageId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.TbImageInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Get image
+      tags:
+      - Image
+  /ns/{nsId}/resources/securityGroup:
+    delete:
+      consumes:
+      - application/json
+      description: Delete all Security Groups
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Delete all Security Groups
+      tags:
+      - Security Group
+    get:
+      consumes:
+      - application/json
+      description: List all Security Groups
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.RestGetAllSecurityGroupResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: List all Security Groups
+      tags:
+      - Security Group
+    post:
+      consumes:
+      - application/json
+      description: Create Security Group
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: Details for an securityGroup object
+        in: body
+        name: securityGroupReq
+        required: true
+        schema:
+          $ref: '#/definitions/mcir.TbSecurityGroupReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.TbSecurityGroupInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Create Security Group
+      tags:
+      - Security Group
+  /ns/{nsId}/resources/securityGroup/{securityGroupId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Security Group
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: Security Group ID
+        in: path
+        name: securityGroupId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Delete Security Group
+      tags:
+      - Security Group
+    get:
+      consumes:
+      - application/json
+      description: Get Security Group
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: Security Group ID
+        in: path
+        name: securityGroupId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.TbSecurityGroupInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Get Security Group
+      tags:
+      - Security Group
+  /ns/{nsId}/resources/spec:
+    delete:
+      consumes:
+      - application/json
+      description: Delete all specs
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Delete all specs
+      tags:
+      - Spec
+    get:
+      consumes:
+      - application/json
+      description: List all specs
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.RestGetAllSpecResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: List all specs
+      tags:
+      - Spec
+    post:
+      consumes:
+      - application/json
+      description: Register spec
+      parameters:
+      - description: registerWithInfo or else
+        in: query
+        name: registeringMethod
+        required: true
+        type: string
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: Details for an spec object
+        in: body
+        name: specInfo
+        schema:
+          $ref: '#/definitions/mcir.TbSpecInfo'
+      - description: name, connectionName and cspSpecName
+        in: body
+        name: specName
+        schema:
+          $ref: '#/definitions/mcir.TbSpecReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.TbSpecInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Register spec
+      tags:
+      - Spec
+  /ns/{nsId}/resources/spec/{specId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete spec
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: Spec ID
+        in: path
+        name: specId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Delete spec
+      tags:
+      - Spec
+    get:
+      consumes:
+      - application/json
+      description: Get spec
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: Spec ID
+        in: path
+        name: specId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.TbSpecInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Get spec
+      tags:
+      - Spec
+  /ns/{nsId}/resources/sshKey:
+    delete:
+      consumes:
+      - application/json
+      description: Delete all SSH Keys
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Delete all SSH Keys
+      tags:
+      - SSH Key
+    get:
+      consumes:
+      - application/json
+      description: List all SSH Keys
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.RestGetAllSshKeyResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: List all SSH Keys
+      tags:
+      - SSH Key
+    post:
+      consumes:
+      - application/json
+      description: Create SSH Key
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: Details for an SSH Key object
+        in: body
+        name: sshKeyInfo
+        required: true
+        schema:
+          $ref: '#/definitions/mcir.TbSshKeyReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.TbSshKeyInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Create SSH Key
+      tags:
+      - SSH Key
+  /ns/{nsId}/resources/sshKey/{sshKeyId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete SSH Key
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: SSH Key ID
+        in: path
+        name: sshKeyId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Delete SSH Key
+      tags:
+      - SSH Key
+    get:
+      consumes:
+      - application/json
+      description: Get SSH Key
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: SSH Key ID
+        in: path
+        name: sshKeyId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.TbSshKeyInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Get SSH Key
+      tags:
+      - SSH Key
+  /ns/{nsId}/resources/vNet:
+    delete:
+      consumes:
+      - application/json
+      description: Delete all VNets
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Delete all VNets
+      tags:
+      - VNet
+    get:
+      consumes:
+      - application/json
+      description: List all VNets
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.RestGetAllVNetResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: List all VNets
+      tags:
+      - VNet
+    post:
+      consumes:
+      - application/json
+      description: Create VNet
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: Details for an VNet object
+        in: body
+        name: vNetReq
+        required: true
+        schema:
+          $ref: '#/definitions/mcir.TbVNetReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.TbVNetInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Create VNet
+      tags:
+      - VNet
+  /ns/{nsId}/resources/vNet/{vNetId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete VNet
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: VNet ID
+        in: path
+        name: vNetId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Delete VNet
+      tags:
+      - VNet
+    get:
+      consumes:
+      - application/json
+      description: Get VNet
+      parameters:
+      - description: Namespace ID
+        in: path
+        name: nsId
+        required: true
+        type: string
+      - description: VNet ID
+        in: path
+        name: vNetId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/mcir.TbVNetInfo'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.SimpleMsg'
+      summary: Get VNet
+      tags:
+      - VNet
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"
