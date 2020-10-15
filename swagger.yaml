@@ -1,4 +1,3 @@
----
 basePath: /tumblebug
 definitions:
   common.ConfigInfo:
