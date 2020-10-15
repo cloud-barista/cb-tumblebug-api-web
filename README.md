@@ -27,9 +27,13 @@ Access to: https://cloud-barista.github.io/cb-tumblebug-api-web/
 
 ## How to update the API documentation page
 
-Replace contents in https://github.com/cloud-barista/cb-tumblebug-api-web/blob/master/swagger.yaml with https://github.com/cloud-barista/cb-tumblebug/blob/master/src/docs/swagger.yaml
+Replace 
+
+https://github.com/cloud-barista/cb-tumblebug-api-web/blob/master/swagger.yaml 
+
+with 
+
+https://github.com/cloud-barista/cb-tumblebug/blob/master/src/docs/swagger.yaml
 
 GitHub pages will update the page automatically.
-
-
 
