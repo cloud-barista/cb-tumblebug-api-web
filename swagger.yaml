@@ -661,6 +661,9 @@ definitions:
         type: string
       id:
         type: string
+      installMonAgent:
+        description: yes or no
+        type: string
       name:
         type: string
       placement_algo:
@@ -679,6 +682,13 @@ definitions:
   mcis.TbMcisReq:
     properties:
       description:
+        type: string
+      installMonAgent:
+        description: |-
+          EnableAgent Option for CB-Dragonfly agent installation ([yes/no] default:yes)
+
+          in: body
+          required: false
         type: string
       name:
         type: string
@@ -705,6 +715,9 @@ definitions:
       location:
         $ref: '#/definitions/mcis.GeoLocation'
         type: object
+      monAgentStatus:
+        description: Montoring agent status
+        type: string
       name:
         type: string
       privateDNS:
@@ -830,7 +843,7 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
   title: CB-Tumblebug REST API
-  version: master-latest
+  version: 0.2.0
 paths:
   /config:
     delete:
