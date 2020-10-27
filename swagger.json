@@ -3655,6 +3655,10 @@
                 "id": {
                     "type": "string"
                 },
+                "installMonAgent": {
+                    "description": "yes or no",
+                    "type": "string"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -3682,6 +3686,10 @@
             "type": "object",
             "properties": {
                 "description": {
+                    "type": "string"
+                },
+                "installMonAgent": {
+                    "description": "EnableAgent Option for CB-Dragonfly agent installation ([yes/no] default:yes)\n\nin: body\nrequired: false",
                     "type": "string"
                 },
                 "name": {
@@ -3720,6 +3728,10 @@
                 "location": {
                     "type": "object",
                     "$ref": "#/definitions/mcis.GeoLocation"
+                },
+                "monAgentStatus": {
+                    "description": "Montoring agent status",
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"
