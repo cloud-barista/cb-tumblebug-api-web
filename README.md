@@ -6,34 +6,40 @@ CB-Tumblebug is a Framework for Cloud-Barista Platform to Manage Multi-Cloud Inf
 This repository is to host CB-Tumblebug API Documentation in GitHub Pages.
 
 ```
-[NOTE]
-CB-Tumblebug is currently under development. (the latest version is 0.2 cappuccino)
+[NOTE] Development stage of CB-Tumblebug 
+CB-Tumblebug is currently under development. 
 So, we do not recommend using the current release in production.
 Please note that the functionalities of CB-Tumblebug are not stable and secure yet.
 If you have any difficulties in using CB-Tumblebug, please let us know.
 (Open an issue or Join the cloud-barista Slack)
 ```
 
-The API document in this repo is for CB-Tumblebug master branch. 
+The API document is for CB-Tumblebug master branch (the latest dev branch). 
 (https://github.com/cloud-barista/cb-tumblebug/tree/master)
 
-It is not for API release but for development.
-(master branch is a dev branch)
 
 ## Access the API documentation page
 
 Access to: https://cloud-barista.github.io/cb-tumblebug-api-web/
 (Authorize with `default`/`default`)
 
-## How to update the API documentation page
+The main page will show `swagger.yaml` in master branch of CB-Tumblebug repository.
 
-Replace 
+(https://github.com/cloud-barista/cb-tumblebug/blob/master/src/docs/swagger.yaml)
 
-https://github.com/cloud-barista/cb-tumblebug-api-web/blob/master/swagger.yaml 
 
-with 
+## How to change veiw for each API version
 
-https://github.com/cloud-barista/cb-tumblebug/blob/master/src/docs/swagger.yaml
+You can change view accoring to API versions in https://github.com/cloud-barista/cb-tumblebug/tree/master/src/docs
 
-GitHub pages will update the page automatically.
+For instance, 
 
+For API master latest, access to 
+- https://cloud-barista.github.io/cb-tumblebug-api-web
+- https://cloud-barista.github.io/cb-tumblebug-api-web/?url=https://raw.githubusercontent.com/cloud-barista/cb-tumblebug/master/src/docs/swagger.yaml
+
+For API v0.3.0, access to 
+- https://cloud-barista.github.io/cb-tumblebug-api-web/?url=https://raw.githubusercontent.com/cloud-barista/cb-tumblebug/master/src/docs/v0.3.0.yaml
+
+For API vX.Y.Z, access to 
+- https://cloud-barista.github.io/cb-tumblebug-api-web/?url=https://raw.githubusercontent.com/cloud-barista/cb-tumblebug/master/src/docs/vX.Y.Z.yaml
