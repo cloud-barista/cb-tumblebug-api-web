@@ -5,15 +5,6 @@ CB-Tumblebug is a Framework for Cloud-Barista Platform to Manage Multi-Cloud Inf
 
 This repository is to host CB-Tumblebug API Documentation in GitHub Pages.
 
-```
-[NOTE] Development stage of CB-Tumblebug 
-CB-Tumblebug is currently under development. 
-So, we do not recommend using the current release in production.
-Please note that the functionalities of CB-Tumblebug are not stable and secure yet.
-If you have any difficulties in using CB-Tumblebug, please let us know.
-(Open an issue or Join the cloud-barista Slack)
-```
-
 The API document is for CB-Tumblebug master branch (the latest dev branch). 
 (https://github.com/cloud-barista/cb-tumblebug/tree/master)
 
