@@ -16,21 +16,21 @@ Access to: https://cloud-barista.github.io/cb-tumblebug-api-web/
 
 The main page will show `swagger.yaml` in main branch of CB-Tumblebug repository.
 
-(https://github.com/cloud-barista/cb-tumblebug/blob/main/src/docs/swagger.yaml)
+(https://github.com/cloud-barista/cb-tumblebug/blob/main/src/api/rest/docs/swagger.yaml)
 
 
 ## How to change veiw for each API version
 
-You can change view accoring to API versions in https://github.com/cloud-barista/cb-tumblebug/tree/main/src/docs
+You can change view accoring to API versions in https://github.com/cloud-barista/cb-tumblebug/tree/main/src/api/rest/docs
 
 For instance, 
 
 For API main latest, access to 
 - https://cloud-barista.github.io/cb-tumblebug-api-web
-- https://cloud-barista.github.io/cb-tumblebug-api-web/?url=https://raw.githubusercontent.com/cloud-barista/cb-tumblebug/main/src/docs/swagger.yaml
+- https://cloud-barista.github.io/cb-tumblebug-api-web/?url=https://raw.githubusercontent.com/cloud-barista/cb-tumblebug/main/src/api/rest/docs/swagger.yaml
 
 For API v0.3.0, access to 
-- https://cloud-barista.github.io/cb-tumblebug-api-web/?url=https://raw.githubusercontent.com/cloud-barista/cb-tumblebug/main/src/docs/v0.3.0.yaml
+- https://cloud-barista.github.io/cb-tumblebug-api-web/?url=https://raw.githubusercontent.com/cloud-barista/cb-tumblebug/main/src/api/rest/docs/v0.3.0.yaml
 
 For API vX.Y.Z, access to 
-- https://cloud-barista.github.io/cb-tumblebug-api-web/?url=https://raw.githubusercontent.com/cloud-barista/cb-tumblebug/main/src/docs/vX.Y.Z.yaml
+- https://cloud-barista.github.io/cb-tumblebug-api-web/?url=https://raw.githubusercontent.com/cloud-barista/cb-tumblebug/main/src/api/rest/docs/vX.Y.Z.yaml
